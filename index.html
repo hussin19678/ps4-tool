@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ar" manifest="cache.appcache">
+
+<!-- Mirrored from ather2d.github.io/11-13/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 27 Aug 2026 13:28:03 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title> HUSSEIN ALI - PS4 Tool</title>
+<style>
+  html, body { 
+    margin:0; 
+    padding:0; 
+    background:#003791;
+    font:15px/1.45 "Segoe UI", system-ui, sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  #card {
+    width:100%;
+    max-width:480px;
+    margin:16px;
+    background:#0e1116;
+    border-radius:16px;
+    border:1px solid #1e2732;
+    box-shadow:0 12px 40px rgba(0,0,0,0.6);
+    overflow:hidden;
+  }
+
+  #brand {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 18px;
+    background:#0b0d10;
+    border-bottom:1px solid #1e2732;
+  }
+  
+  #brand .avatar {
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:linear-gradient(135deg, #2a5298, #7c3aed);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    font-weight:700;
+    color:#fff;
+    flex-shrink:0;
+    box-shadow:0 2px 12px rgba(124,58,237,0.3);
+  }
+  
+  #brand .info { flex:1; }
+  #brand .name {
+    font-size:16px;
+    font-weight:700;
+    color:#e6ebf2;
+    letter-spacing:0.02em;
+  }
+  #brand .sub {
+    font-size:11px;
+    color:#5c6672;
+    letter-spacing:0.05em;
+  }
+  #brand .badge {
+    background:rgba(124,58,237,0.15);
+    border:1px solid rgba(124,58,237,0.15);
+    border-radius:20px;
+    padding:3px 12px;
+    font-size:9px;
+    font-weight:600;
+    color:#a78bfa;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+  }
+
+  #wrap { padding:18px 20px 22px; }
+
+  #state {
+    font-size:22px;
+    font-weight:700;
+    margin:0 0 6px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  #state .dot {
+    display:inline-block;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    flex-shrink:0;
+    animation:pulse 1.5s ease-in-out infinite;
+  }
+  #state .dot.on { background:#7fd0a0; }
+  #state .dot.off { background:#d08a7f; animation:none; }
+  #state .dot.wait { background:#d8c07f; }
+
+  @keyframes pulse {
+    0%, 100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.4; transform:scale(0.8); }
+  }
+
+  #state.ok { color:#7fd0a0; }
+  #state.bad { color:#d08a7f; }
+  #state.warn { color:#d8c07f; }
+  #state.loading { color:#7fb0d0; }
+
+  #det {
+    font-size:13px;
+    color:#8b95a3;
+    margin:0 0 4px;
+    line-height:1.5;
+  }
+  #det b { color:#c8ced8; font-weight:600; }
+  #det .highlight { color:#a78bfa; font-weight:600; }
+
+  #cache {
+    font-size:12px;
+    color:#5c6672;
+    margin:8px 0 0;
+    min-height:18px;
+    padding:6px 10px;
+    border-radius:8px;
+    background:rgba(255,255,255,0.02);
+    border:1px solid rgba(255,255,255,0.04);
+    transition:all 0.3s ease;
+  }
+  #cache.cacheok {
+    color:#7fd0a0;
+    border-color:rgba(127,208,160,0.1);
+    background:rgba(127,208,160,0.04);
+  }
+  #cache.cacheerror {
+    color:#d08a7f;
+    border-color:rgba(208,138,127,0.1);
+    background:rgba(208,138,127,0.04);
+  }
+  #cache .icon { margin-right:6px; }
+
+  #progress {
+    margin-top:10px;
+    height:3px;
+    background:rgba(255,255,255,0.05);
+    border-radius:10px;
+    overflow:hidden;
+    opacity:0;
+    transition:opacity 0.4s ease;
+  }
+  #progress.active { opacity:1; }
+  #progress .bar {
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, #7c3aed, #2a5298);
+    border-radius:10px;
+    transition:width 0.3s ease;
+  }
+
+  #action-btn {
+    display:none;
+    margin-top:14px;
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:700;
+    color:#fff;
+    background:linear-gradient(135deg, #7c3aed, #2a5298);
+    cursor:pointer;
+    transition:all 0.3s ease;
+    box-shadow:0 4px 16px rgba(124,58,237,0.2);
+  }
+  #action-btn:hover { transform:scale(1.01); }
+  #action-btn:active { transform:scale(0.98); }
+  #action-btn.show { display:block; }
+
+  .divider {
+    height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    margin:10px 0 12px;
+  }
+
+  #footer {
+    margin-top:10px;
+    font-size:10px;
+    color:#3a424d;
+    text-align:center;
+    letter-spacing:0.05em;
+  }
+
+  /* تنسيق للشاشات الصغيرة */
+  @media (max-width:500px) {
+    #card { margin:10px; border-radius:12px; }
+    #brand { padding:12px 14px; }
+    #wrap { padding:14px 16px 18px; }
+    #state { font-size:19px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="card">
+  <!-- الشريط العلوي مع الصورة -->
+  <div id="brand">
+    <div class="avatar">
+      <!-- صورة الشعار كـ Emoji أو حرف -->
+      <span class="icon">🤯​</span>
+    </div>
+    <div class="info">
+      <div class="name">HUSSEIN ALI</div>
+      <div class="sub">PS4 Tool · v2.0</div>
+    </div>
+    <div class="badge">⚡ exploit</div>
+  </div>
+
+  <div id="wrap">
+    <div id="state">
+      <span class="dot wait" id="dot"></span>
+      <span id="state-text">جاري الكشف...</span>
+    </div>
+    <div id="det">جاري تحليل النظام...</div>
+
+    <div class="divider"></div>
+
+    <div id="cache">
+      <span class="icon">⏳</span>
+      <span id="cache-text">جاري التخزين المؤقت...</span>
+    </div>
+
+    <div id="progress"><div class="bar" id="progress-bar"></div></div>
+
+    <button id="action-btn">▸ اضغط للمتابعة</button>
+
+    <div id="footer">HUSSEIN ALI © 2026 — جميع الحقوق محفوظة</div>
+  </div>
+</div>
+
+<script>
+(function() {
+    // ===== العناصر =====
+    var stateText = document.getElementById("state-text");
+    var detEl = document.getElementById("det");
+    var cacheText = document.getElementById("cache-text");
+    var cacheEl = document.getElementById("cache");
+    var dot = document.getElementById("dot");
+    var progress = document.getElementById("progress");
+    var progressBar = document.getElementById("progress-bar");
+    var actionBtn = document.getElementById("action-btn");
+
+    // ===== دوال مساعدة =====
+    function setState(t, type) {
+        stateText.textContent = t;
+        var parent = document.getElementById("state");
+        parent.className = type || "";
+        dot.className = "dot " + (type === "ok" ? "on" : type === "bad" ? "off" : "wait");
+    }
+    
+    function setCache(t, ok, error) {
+        cacheText.textContent = t;
+        if (error) {
+            cacheEl.className = "cacheerror";
+            cacheEl.querySelector(".icon").textContent = "✗";
+        } else {
+            cacheEl.className = ok ? "cacheok" : "";
+            cacheEl.querySelector(".icon").textContent = ok ? "✓" : "⏳";
+        }
+    }
+    
+    function setProgress(pct) {
+        progress.className = "active";
+        progressBar.style.width = Math.min(pct, 100) + "%";
+    }
+    
+    function showBtn(label, action) {
+        actionBtn.textContent = label || "▸ اضغط للمتابعة";
+        actionBtn.className = "show";
+        actionBtn.onclick = action;
+    }
+    
+    function hideBtn() {
+        actionBtn.className = "";
+        actionBtn.onclick = null;
+    }
+
+    // ===== تحليل الجهاز =====
+    var params = new URLSearchParams(location.search);
+    var key = null, fwnum = null;
+    var m = /PlayStation\s+4[\/ ](\d+)\.(\d+)/.exec(navigator.userAgent);
+    if (m) {
+        var minor = parseInt(m[2], 16);
+        var ms = minor.toString(16);
+        if (ms.length < 2) ms = "0" + ms;
+        key = m[1] + "." + ms;
+        fwnum = parseInt(m[1], 10) * 100 + parseInt(ms, 10);
+    }
+
+    var bug = null, why = "";
+    var forced = params.get("bug");
+    if (forced === "lapse" || forced === "poops") {
+        bug = forced;
+        why = "تم التحديد يدوياً via ?bug=" + forced;
+    } else if (!key) {
+        why = "المتصفح ليس من PlayStation 4";
+    } else if (fwnum <= 1202) {
+        bug = "lapse";
+        why = key + " ≤ 12.02 ✓";
+    } else if (fwnum >= 1250) {
+        bug = "poops";
+        why = key + " ≥ 12.50 ✓";
+    } else {
+        why = key + " — لا توجد ثغرة مناسبة (lapse حتى 12.02، poops من 12.50)";
+    }
+
+    var bugDisplay = bug ? '<span class="highlight">' + bug + '</span>' : '<span style="color:#d08a7f;">غير مدعوم</span>';
+    detEl.innerHTML = 'الإصدار <b>' + (key || 'غير معروف') + '</b>'
+        + ' &middot; الثغرة ' + bugDisplay
+        + ' &middot; ' + why;
+
+    if (!bug) {
+        setState("⚠️ إصدار غير مدعوم", "bad");
+        setCache("لا توجد ثغرة مناسبة لهذا الإصدار", false, true);
+        return;
+    }
+
+    var target = (bug === "lapse" ? "run_lapse.html" : "run_poops.html") + location.search;
+
+    function go() {
+        setState("جاري التحميل...", "loading");
+        setProgress(30);
+        setTimeout(function() {
+            setProgress(70);
+            setTimeout(function() {
+                setProgress(100);
+                location.replace(target);
+            }, 300);
+        }, 400);
+    }
+
+    function waitForTap(msg, action) {
+        setState(msg, "warn");
+        showBtn("▸ اضغط للتشغيل", action);
+    }
+
+    // ===== نظام التخزين المؤقت =====
+    function setupCache() {
+        var ac = window.applicationCache;
+        var isPS4 = /PlayStation/.test(navigator.userAgent);
+        var hasManifest = document.documentElement.hasAttribute("manifest");
+
+        // التحقق من التخزين المسبق في localStorage
+        try {
+            if (localStorage.getItem('ps4tool_cached') === 'true' && !navigator.onLine) {
+                setCache("✓ مخزّن مسبقاً ✅", true);
+                setTimeout(go, 300);
+                return;
+            }
+        } catch(e) {}
+
+        if (!ac || !hasManifest) {
+            // إذا لم يكن AppCache متاحاً، استخدم localStorage كبديل
+            setCache("⏳ جاري التخزين المحلي...");
+            setProgress(5);
+            
+            var files = ['index.html', 'run_lapse.html', 'run_poops.html', 'chain_lapse.js', 'chain_poops.js'];
+            var total = files.length;
+            var loaded = 0;
+            
+            files.forEach(function(file) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET.html', file, true);
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        try {
+                            localStorage.setItem('cache_' + file, xhr.responseText);
+                            loaded++;
+                            var pct = Math.round((loaded / total) * 100);
+                            setCache("⏳ التخزين: " + pct + "%");
+                            setProgress(Math.min(pct, 90));
+                            if (loaded === total) {
+                                localStorage.setItem('ps4tool_cached', 'true');
+                                setCache("✓ تم التخزين المحلي ✅", true);
+                                setProgress(100);
+                                setTimeout(go, 500);
+                            }
+                        } catch(e) {}
+                    }
+                };
+                xhr.send();
+            });
+            return;
+        }
+
+        // استخدام Application Cache
+        setCache("⏳ جاري التخزين المؤقت...");
+        setProgress(5);
+
+        ac.addEventListener('checking', function() {
+            setCache("⏳ جاري التحقق...");
+        }, false);
+
+        ac.addEventListener('downloading', function() {
+            setCache("⏳ جاري التحميل...");
+            setProgress(10);
+        }, false);
+
+        ac.addEventListener('progress', function(e) {
+            if (e && e.total) {
+                var pct = Math.round((e.loaded / e.total) * 100);
+                setCache("⏳ التخزين: " + pct + "%");
+                setProgress(Math.min(pct, 90));
+            }
+        }, false);
+
+        ac.addEventListener('cached', function() {
+            setCache("✓ تم التخزين بنجاح ✅", true);
+            setProgress(100);
+            try { localStorage.setItem('ps4tool_cached', 'true'); } catch(e) {}
+            setTimeout(go, 500);
+        }, false);
+
+        ac.addEventListener('noupdate', function() {
+            setCache("✓ مخزّن مسبقاً ✅", true);
+            setProgress(100);
+            try { localStorage.setItem('ps4tool_cached', 'true'); } catch(e) {}
+            setTimeout(go, 400);
+        }, false);
+
+        ac.addEventListener('updateready', function() {
+            try { ac.swapCache(); } catch(e) {}
+            setCache("✓ تم التحديث ✅", true);
+            setProgress(100);
+            waitForTap("🔄 تحديث جاهز — اضغط للتشغيل", function() { 
+                location.reload(); 
+            });
+        }, false);
+
+        ac.addEventListener('error', function(e) {
+            console.warn('AppCache error:', e);
+            setCache("⚠️ فشل التخزين المؤقت", false, true);
+            waitForTap("⚠️ فشل الكاش — اضغط للتشغيل", go);
+        }, false);
+
+        ac.addEventListener('obsolete', function() {
+            setCache("⚠️ الكاش قديم", false, true);
+            waitForTap("⚠️ كاش قديم — اضغط للتشغيل", go);
+        }, false);
+
+        // إذا كان متصفح PS4 و AppCache جاهز
+        if (isPS4 && ac.status === ac.IDLE) {
+            setCache("✓ مخزّن مسبقاً ✅", true);
+            setProgress(100);
+            try { localStorage.setItem('ps4tool_cached', 'true'); } catch(e) {}
+            setTimeout(go, 400);
+        }
+    }
+
+    // ===== بدء التشغيل =====
+    setupCache();
+})();
+</script>
+</body>
+
+<!-- Mirrored from ather2d.github.io/11-13/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 27 Aug 2026 13:28:29 GMT -->
+</html>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ar" manifest="cache.appcache">
+
+<!-- Mirrored from ather2d.github.io/11-13/run_poops.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 27 Aug 2026 13:28:29 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>سجاد مهدي - Poops</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font: 15px/1.45 "Segoe UI", system-ui, sans-serif;
+      /* 🔽 صورة خلفية محلية - ضع ملف الصورة في نفس المجلد 🔽 */
+      background-image: url('background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    /* ❌ تم إزالة طبقة التعتيم بالكامل ❌ */
+
+    #card {
+      width: 100%;
+      max-width: 520px;
+      margin: 16px;
+      background: rgba(14, 17, 22, 0.88);
+      backdrop-filter: blur(6px);
+      border-radius: 16px;
+      border: 1px solid rgba(30, 39, 50, 0.6);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+    }
+
+    #brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: rgba(11, 13, 16, 0.7);
+      border-bottom: 1px solid rgba(30, 39, 50, 0.6);
+    }
+
+    #brand .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed, #db2777);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 2px 12px rgba(124, 58, 237, 0.3);
+    }
+
+    #brand .info {
+      flex: 1;
+    }
+    #brand .name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #e6ebf2;
+      letter-spacing: 0.02em;
+    }
+    #brand .sub {
+      font-size: 11px;
+      color: #8b95a3;
+      letter-spacing: 0.05em;
+    }
+    #brand .badge {
+      background: rgba(124, 58, 237, 0.15);
+      border: 1px solid rgba(124, 58, 237, 0.15);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 9px;
+      font-weight: 600;
+      color: #a78bfa;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    #wrap {
+      padding: 18px 20px 22px;
+    }
+
+    #state {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #state .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #a78bfa;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    #state.ok {
+      color: #6ee7b7;
+    }
+    #state.bad {
+      color: #d08a7f;
+    }
+    #state.warn {
+      color: #d8c07f;
+    }
+    #state.loading {
+      color: #7fb0d0;
+    }
+    #state.done {
+      color: #6ee7b7;
+    }
+
+    #out {
+      white-space: pre-wrap;
+      font: 12px/1.45 Consolas, "Cascadia Code", monospace;
+      background: rgba(17, 21, 27, 0.9);
+      border: 1px solid rgba(30, 39, 50, 0.6);
+      border-radius: 8px;
+      padding: 12px 14px;
+      min-height: 200px;
+      height: calc(100vh - 280px);
+      overflow-y: auto;
+      color: #a8b8d8;
+    }
+
+    #out::-webkit-scrollbar {
+      width: 4px;
+    }
+    #out::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    #out::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    .log-ok {
+      color: #6ee7b7;
+    }
+    .log-bad {
+      color: #d08a7f;
+    }
+    .log-warn {
+      color: #d8c07f;
+    }
+    .log-info {
+      color: #7fb0d0;
+    }
+
+    #progress {
+      margin: 10px 0 0;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    #progress.active {
+      opacity: 1;
+    }
+    #progress .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #7c3aed, #db2777);
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+
+    #footer {
+      margin-top: 10px;
+      font-size: 10px;
+      color: #5a6675;
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 500px) {
+      #card {
+        margin: 10px;
+        border-radius: 12px;
+      }
+      #brand {
+        padding: 12px 14px;
+      }
+      #wrap {
+        padding: 14px 16px 18px;
+      }
+      #state {
+        font-size: 18px;
+      }
+      #out {
+        height: calc(100vh - 240px);
+        min-height: 150px;
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="card">
+    <!-- الشريط العلوي -->
+    <div id="brand">
+      <div class="avatar">
+        <span>🛡️</span>
+      </div>
+      <div class="info">
+        <div class="name">سجاد مهدي</div>
+        <div class="sub">PS4 Tool · Poops</div>
+      </div>
+      <div class="badge">⚡ poops</div>
+    </div>
+
+    <div id="wrap">
+      <div id="state">
+        <span class="spinner" id="spinner"></span>
+        <span id="state-text">جاري تحميل سلسلة Poops...</span>
+      </div>
+
+      <div id="out">⏳ جاري التهيئة...</div>
+
+      <div id="progress"><div class="bar" id="progress-bar"></div></div>
+
+      <div id="footer">سجاد مهدي © 2026 — جميع الحقوق محفوظة</div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ===== العناصر =====
+      var stateText = document.getElementById("state-text");
+      var stateEl = document.getElementById("state");
+      var spinner = document.getElementById("spinner");
+      var output = document.getElementById("out");
+      var progress = document.getElementById("progress");
+      var progressBar = document.getElementById("progress-bar");
+
+      // ===== دوال مساعدة =====
+      function setState(text, type) {
+        stateText.textContent = text;
+        stateEl.className = type || "";
+        if (type === 'done' || type === 'ok') {
+          spinner.style.display = 'none';
+        } else {
+          spinner.style.display = 'block';
+        }
+      }
+
+      function logMessage(msg, type) {
+        var className = '';
+        if (type === 'ok') className = 'log-ok';
+        else if (type === 'bad') className = 'log-bad';
+        else if (type === 'warn') className = 'log-warn';
+        else if (type === 'info') className = 'log-info';
+
+        var line = document.createElement('div');
+        line.className = className;
+        line.textContent = msg;
+        output.appendChild(line);
+        output.scrollTop = output.scrollHeight;
+      }
+
+      function setProgress(pct) {
+        progress.className = "active";
+        progressBar.style.width = Math.min(pct, 100) + "%";
+      }
+
+      // ===== تهيئة الإخراج =====
+      logMessage('🔄 جاري تهيئة سلسلة Poops...', 'info');
+      logMessage('📍 الثغرة: Poops (PS4 12.50 أو أعلى)', 'info');
+      setState('جاري التحميل...', 'loading');
+      setProgress(10);
+
+      // ===== تحميل الـ Chain =====
+      function loadChain() {
+        logMessage('📦 جاري تحميل chain_poops.js...', 'info');
+        setProgress(30);
+
+        try {
+          import("chain_poops.js")
+            .then(function(module) {
+              logMessage('✅ تم تحميل السلسلة بنجاح', 'ok');
+              setProgress(100);
+              setState('✅ تم التحميل', 'done');
+              logMessage('🚀 جاري تشغيل الثغرة...', 'info');
+
+              if (module && typeof module.run === 'function') {
+                module.run();
+              } else if (module && typeof module.default === 'function') {
+                module.default();
+              } else {
+                logMessage('⚠️ لا توجد دالة تشغيل في السلسلة', 'warn');
+              }
+            })
+            .catch(function(err) {
+              logMessage('❌ فشل تحميل السلسلة: ' + err.message, 'bad');
+              setState('⚠️ فشل التحميل', 'bad');
+              setProgress(0);
+              console.error('Chain load error:', err);
+            });
+        } catch (err) {
+          logMessage('❌ خطأ في التحميل: ' + err.message, 'bad');
+          setState('⚠️ خطأ في التحميل', 'bad');
+          console.error('Load error:', err);
+        }
+      }
+
+      // ===== التحقق من الكاش =====
+      function checkCache() {
+        var ac = window.applicationCache;
+        var hasManifest = document.documentElement.hasAttribute("manifest");
+
+        if (!ac || !hasManifest) {
+          logMessage('⚠️ التخزين المؤقت غير متاح، سيتم التحميل مباشرة', 'warn');
+          loadChain();
+          return;
+        }
+
+        logMessage('⏳ جاري التحقق من التخزين المؤقت...', 'info');
+        setProgress(5);
+
+        if (!navigator.onLine) {
+          logMessage('✓ وضع غير متصل — من التخزين المؤقت', 'ok');
+          setProgress(50);
+          loadChain();
+          return;
+        }
+
+        if (ac.status === ac.IDLE) {
+          logMessage('✓ مخزّن مسبقاً — جاهز', 'ok');
+          setProgress(50);
+          loadChain();
+          return;
+        }
+
+        if (ac.status === ac.UPDATEREADY) {
+          try { ac.swapCache(); } catch (e) {}
+          logMessage('✓ تم تحميل التحديث', 'ok');
+          setProgress(50);
+          loadChain();
+          return;
+        }
+
+        // مراقبة أحداث AppCache
+        ac.addEventListener('downloading', function() {
+          logMessage('⏳ جاري التخزين المؤقت...', 'info');
+          setProgress(10);
+        }, false);
+
+        ac.addEventListener('progress', function(e) {
+          if (e && e.total) {
+            var pct = Math.round((e.loaded / e.total) * 100);
+            setProgress(Math.min(pct, 90));
+            if (pct % 10 === 0) {
+              logMessage('⏳ التخزين: ' + pct + '%', 'info');
+            }
+          }
+        }, false);
+
+        ac.addEventListener('cached', function() {
+          logMessage('✓ تم التخزين بنجاح ✅', 'ok');
+          setProgress(100);
+          setTimeout(loadChain, 300);
+        }, false);
+
+        ac.addEventListener('noupdate', function() {
+          logMessage('✓ مخزّن مسبقاً — جاهز', 'ok');
+          setProgress(50);
+          loadChain();
+        }, false);
+
+        ac.addEventListener('error', function(e) {
+          logMessage('⚠️ فشل التخزين المؤقت: ' + (e.message || 'خطأ غير معروف'), 'warn');
+          logMessage('⏳ سيتم التحميل مباشرة...', 'info');
+          loadChain();
+        }, false);
+
+        ac.addEventListener('obsolete', function() {
+          logMessage('⚠️ الكاش قديم، سيتم التحميل مباشرة', 'warn');
+          loadChain();
+        }, false);
+      }
+
+      // ===== بدء التشغيل =====
+      logMessage('🔄 بدء تشغيل Poops Chain...', 'info');
+      checkCache();
+
+      // ===== إذا فشل التحميل بعد 15 ثانية =====
+      setTimeout(function() {
+        if (output.children.length < 3) {
+          logMessage('⏳ جاري محاولة التحميل...', 'warn');
+          setProgress(20);
+          loadChain();
+        }
+      }, 15000);
+
+    })();
+  </script>
+
+  <script type="module">
+    console.log('🔄 محاولة تحميل chain_poops.js عبر module...');
+    try {
+      import("chain_poops.js")
+        .then(function(module) {
+          console.log('✅ تم تحميل chain_poops.js بنجاح');
+          var output = document.getElementById('out');
+          if (output) {
+            var line = document.createElement('div');
+            line.className = 'log-ok';
+            line.textContent = '✅ تم تحميل السلسلة بنجاح';
+            output.appendChild(line);
+          }
+          if (module && typeof module.run === 'function') {
+            module.run();
+          }
+        })
+        .catch(function(err) {
+          console.error('❌ فشل تحميل chain_poops.js:', err);
+          var output = document.getElementById('out');
+          if (output) {
+            var line = document.createElement('div');
+            line.className = 'log-bad';
+            line.textContent = '❌ فشل تحميل السلسلة: ' + err.message;
+            output.appendChild(line);
+          }
+        });
+    } catch (err) {
+      console.error('❌ خطأ:', err);
+    }
+  </script>
+</body>
+
+<!-- Mirrored from ather2d.github.io/11-13/run_poops.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 27 Aug 2026 13:28:30 GMT -->
+</html>
